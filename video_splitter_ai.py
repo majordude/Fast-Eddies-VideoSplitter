@@ -110,6 +110,15 @@ def _script_dir() -> Path:
     return Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
 
 
+def default_model_path() -> Path:
+    """Default model location: a ``models`` folder next to this script.
+
+    Keeps the app self-contained (portable) instead of writing the model into
+    the user's home directory.
+    """
+    return _script_dir() / "models" / "MobileNet-v3-Small.onnx"
+
+
 def _resolve_tool(path_or_name: str, default_name: str) -> str:
     """Resolve an executable dynamically: explicit path -> bundled next to the
     script -> on PATH. Lets bundled ffmpeg.exe/ffprobe.exe be found regardless
@@ -871,9 +880,7 @@ if QtCore is not None and QtWidgets is not None:
             self.reencode.setChecked(False)
             form.addRow("Export mode", self.reencode)
 
-            self.model_path = QtWidgets.QLineEdit(
-                str(Path.home() / ".video_splitter_ai" / "MobileNet-v3-Small.onnx")
-            )
+            self.model_path = QtWidgets.QLineEdit(str(default_model_path()))
             form.addRow("Model path", self.model_path)
 
             self.model_url = QtWidgets.QLineEdit(MODEL_URL_DEFAULT)
@@ -997,7 +1004,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--model-path",
         type=str,
-        default=str(Path.home() / ".video_splitter_ai" / "MobileNet-v3-Small.onnx"),
+        default=str(default_model_path()),
         help="Path to ONNX model (auto-downloaded if missing).",
     )
     p.add_argument("--model-url", type=str, default=MODEL_URL_DEFAULT, help="Model download URL.")

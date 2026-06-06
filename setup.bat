@@ -50,7 +50,7 @@ echo(
 
 rem ---- 3) Download the ONNX model -------------------------------
 echo [3/4] Downloading / verifying the ONNX model ...
-%PYCMD% -c "from pathlib import Path; import video_splitter_ai as v; p=Path.home()/'.video_splitter_ai'/'MobileNet-v3-Small.onnx'; v.ensure_model_downloaded(p, v.MODEL_URL_DEFAULT, v.MODEL_SHA256_DEFAULT, print); print('      Model ready at', p)"
+%PYCMD% -c "import video_splitter_ai as v; p=v.default_model_path(); v.ensure_model_downloaded(p, v.MODEL_URL_DEFAULT, v.MODEL_SHA256_DEFAULT, print); print('      Model ready at', p)"
 if errorlevel 1 (
     echo(
     echo [ERROR] Model download failed. Check your internet connection and retry.
