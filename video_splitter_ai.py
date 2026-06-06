@@ -33,6 +33,7 @@ import argparse
 import dataclasses
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -105,18 +106,25 @@ def _which(exe: str) -> Optional[str]:
     return shutil.which(exe)
 
 
+# Application directory, detected dynamically at runtime from this file's own
+# location (PyInstaller-aware). This is NEVER a hardcoded absolute path: it
+# resolves to whatever folder the app lives in on the current machine.
+APP_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(APP_DIR, "models", "MobileNet-v3-Small.onnx")
+
+
 def _script_dir() -> Path:
     """Directory of this script (or the bundle dir when frozen by PyInstaller)."""
-    return Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    return Path(APP_DIR)
 
 
 def default_model_path() -> Path:
-    """Default model location: a ``models`` folder next to this script.
+    """Default model location: ``<APP_DIR>/models/MobileNet-v3-Small.onnx``.
 
-    Keeps the app self-contained (portable) instead of writing the model into
-    the user's home directory.
+    Resolved dynamically at runtime from this file's own path, so the app is
+    self-contained/portable and never tied to a specific user's folder.
     """
-    return _script_dir() / "models" / "MobileNet-v3-Small.onnx"
+    return Path(MODEL_PATH)
 
 
 def _resolve_tool(path_or_name: str, default_name: str) -> str:
@@ -881,6 +889,10 @@ if QtCore is not None and QtWidgets is not None:
             form.addRow("Export mode", self.reencode)
 
             self.model_path = QtWidgets.QLineEdit(str(default_model_path()))
+            self.model_path.setToolTip(
+                "Auto-detected at runtime: a 'models' folder next to the app. "
+                "Resolved from the app's own location, not a fixed path."
+            )
             form.addRow("Model path", self.model_path)
 
             self.model_url = QtWidgets.QLineEdit(MODEL_URL_DEFAULT)
