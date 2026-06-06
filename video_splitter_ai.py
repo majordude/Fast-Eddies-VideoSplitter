@@ -105,6 +105,32 @@ def _which(exe: str) -> Optional[str]:
     return shutil.which(exe)
 
 
+def _script_dir() -> Path:
+    """Directory of this script (or the bundle dir when frozen by PyInstaller)."""
+    return Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+
+
+def _resolve_tool(path_or_name: str, default_name: str) -> str:
+    """Resolve an executable dynamically: explicit path -> bundled next to the
+    script -> on PATH. Lets bundled ffmpeg.exe/ffprobe.exe be found regardless
+    of the current working directory or how the app was launched."""
+    name = path_or_name or default_name
+
+    # 1) Explicit path that exists (absolute or relative to CWD).
+    p = Path(name)
+    if p.exists():
+        return str(p)
+
+    # 2) Bundled next to this script (e.g. ffmpeg.exe in the app folder).
+    exe_name = name if name.lower().endswith(".exe") else f"{name}.exe"
+    bundled = _script_dir() / exe_name
+    if bundled.exists():
+        return str(bundled)
+
+    # 3) Anywhere on PATH.
+    return _which(name) or ""
+
+
 def _run(
     cmd: Sequence[str],
     *,
@@ -124,11 +150,8 @@ def _run(
 
 
 def _ensure_ffmpeg(ffmpeg_path: str, ffprobe_path: str) -> Tuple[str, str]:
-    ffmpeg = ffmpeg_path or "ffmpeg"
-    ffprobe = ffprobe_path or "ffprobe"
-
-    ffmpeg_resolved = ffmpeg if Path(ffmpeg).exists() else (_which(ffmpeg) or "")
-    ffprobe_resolved = ffprobe if Path(ffprobe).exists() else (_which(ffprobe) or "")
+    ffmpeg_resolved = _resolve_tool(ffmpeg_path, "ffmpeg")
+    ffprobe_resolved = _resolve_tool(ffprobe_path, "ffprobe")
 
     if not ffmpeg_resolved:
         raise FileNotFoundError(
