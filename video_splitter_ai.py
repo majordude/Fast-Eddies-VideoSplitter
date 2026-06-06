@@ -485,22 +485,18 @@ def _safe_stem_name(p: Path) -> str:
 class OutputDirs:
     parent: Path
     split_dir: Path
-    joined_dir: Path
     manifest_path: Path
 
 
 def build_output_dirs(input_video: Path, output_root: Optional[Path]) -> OutputDirs:
-    """Create <video>_output/{split_segments,joined_segments} and return paths."""
+    """Create <video>_output/split_segments and return paths."""
     base = _safe_stem_name(input_video)
     parent = (output_root / f"{base}_output") if output_root else (input_video.parent / f"{base}_output")
     split_dir = parent / "split_segments"
-    joined_dir = parent / "joined_segments"
     split_dir.mkdir(parents=True, exist_ok=True)
-    joined_dir.mkdir(parents=True, exist_ok=True)
     return OutputDirs(
         parent=parent,
         split_dir=split_dir,
-        joined_dir=joined_dir,
         manifest_path=parent / "_last_split_job.json",
     )
 
@@ -526,7 +522,6 @@ def write_last_split_manifest(
         "input_video_path": str(config.input_video.resolve()),
         "parent_output_dir": str(parent),
         "split_segments_dir": rel(dirs.split_dir),
-        "joined_segments_dir": rel(dirs.joined_dir),
         "duration_sec": float(duration_sec),
         "split_times_sec": [float(x) for x in split_times],
         "segments": [rel(p) for p in segment_paths],
