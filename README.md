@@ -51,6 +51,22 @@ Three steps to get running on a fresh machine:
   python -m pip install -r requirements.txt
   ```
 
+## FFmpeg binaries (Releases)
+
+`ffmpeg.exe` and `ffprobe.exe` are **not** stored in this repository — each is
+~200 MB, over GitHub's 100 MB file limit. To run the app you need them locally.
+Get them either way:
+
+- **Recommended:** download the bundled `ffmpeg.exe` + `ffprobe.exe` from this
+  repo's [**Releases**](../../releases) page and drop them in the app folder
+  next to `video_splitter_ai.py`, **or**
+- install FFmpeg yourself (e.g. <https://www.gyan.dev/ffmpeg/builds/> or
+  `winget install Gyan.FFmpeg`) and make sure `ffmpeg`/`ffprobe` are on your `PATH`.
+
+> Maintainer note: attach `ffmpeg.exe` and `ffprobe.exe` as assets on a GitHub
+> Release so the link above resolves. Releases don't count against the repo's
+> file-size limits.
+
 ## Usage
 
 The easiest path is the [Quick start](#quick-start-windows) above
