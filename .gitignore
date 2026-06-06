@@ -10,6 +10,7 @@ ffprobe.exe
 
 # Output / generated media
 *_output/
+test_output/
 *_segments/
 *.mp4
 *.mkv
@@ -17,6 +18,10 @@ ffprobe.exe
 *.m4v
 *.avi
 *.webm
+
+# Internal per-job manifest written next to split output (not user-facing,
+# may back a future "recall last job" feature). Never commit it.
+_last_split_job.json
 
 # Python
 __pycache__/
