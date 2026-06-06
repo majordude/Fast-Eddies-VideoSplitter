@@ -1,0 +1,41 @@
+# Bundled FFmpeg binaries are too large for GitHub (>100 MB each).
+# Place ffmpeg.exe / ffprobe.exe here locally, or install FFmpeg on PATH.
+ffmpeg.exe
+ffprobe.exe
+*.exe
+
+# Downloaded ONNX model (auto-fetched on first run)
+*.onnx
+.video_splitter_ai/
+
+# Output / generated media
+*_output/
+*_segments/
+*.mp4
+*.mkv
+*.mov
+*.m4v
+*.avi
+*.webm
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+*.spec
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Scratch
+write_test.txt
+*.old
+*.old2
+* - Copy.py

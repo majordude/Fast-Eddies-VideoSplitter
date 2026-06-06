@@ -1,0 +1,8 @@
+# Fast Eddie's Video Splitter - Python dependencies
+# Tested with Python 3.11
+
+numpy>=1.26,<2.0
+onnxruntime>=1.16
+pillow>=10.0
+requests>=2.31
+PySide6>=6.6      # GUI (optional for CLI-only use)
