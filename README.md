@@ -127,4 +127,8 @@ pyinstaller --noconfirm --clean --onedir --noconsole --name "Fast Eddies Video S
 
 ## License
 
-Personal project — all rights reserved unless a license file is added.
+MIT License (see LICENSE). Copyright (c) 2026 majordude. The MIT license covers this project's own code only.
+
+## Third-party software
+
+FFmpeg (ffmpeg.exe, ffprobe.exe) is a separate program under its own license, GPL or LGPL depending on the build (https://ffmpeg.org/legal.html). If you publish FFmpeg binaries, include FFmpeg's license text and a link to its source. PySide6 is LGPL-3.0. numpy, onnxruntime, Pillow and requests are installed separately under their own licenses. The MobileNetV3-Small ONNX model is downloaded on first run and has its own license.
